@@ -3,45 +3,37 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Realtime Reactions</title>
+  <title>Realtime Reaction Card</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f3f3f3;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      background: #f4f4f4;
     }
     .card {
-      background: #fff;
+      background: white;
       padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
       text-align: center;
-      width: 300px;
-    }
-    h2 {
-      margin-bottom: 15px;
     }
     .reactions {
       display: flex;
-      justify-content: space-around;
-      margin-top: 15px;
+      justify-content: center;
+      gap: 30px;
+      margin-top: 20px;
     }
     .reaction {
-      font-size: 30px;
       cursor: pointer;
+      font-size: 24px;
       user-select: none;
-      text-align: center;
-      transition: transform 0.2s;
-    }
-    .reaction:hover {
-      transform: scale(1.2);
     }
     .count {
-      font-size: 16px;
       display: block;
+      font-size: 18px;
       margin-top: 5px;
     }
   </style>
@@ -49,47 +41,53 @@
 <body>
 
 <div class="card">
-  <h2>React on this!</h2>
+  <h2>React on this Card</h2>
   <div class="reactions">
-    <div class="reaction" onclick="updateReaction('like')">?? <span id="likeCount" class="count">0</span></div>
-    <div class="reaction" onclick="updateReaction('dislike')">?? <span id="dislikeCount" class="count">0</span></div>
-    <div class="reaction" onclick="updateReaction('heart')">?? <span id="heartCount" class="count">0</span></div>
+    <div class="reaction" onclick="updateReaction('like')">
+      ?? <span class="count" id="likeCount">0</span>
+    </div>
+    <div class="reaction" onclick="updateReaction('dislike')">
+      ?? <span class="count" id="dislikeCount">0</span>
+    </div>
+    <div class="reaction" onclick="updateReaction('heart')">
+      ?? <span class="count" id="heartCount">0</span>
+    </div>
   </div>
 </div>
 
-<!-- ? Firebase v8 CDN -->
+<!-- ? Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-  // ?? ???? Firebase Config ???? ?????
-  var firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-    databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT_ID.appspot.com",
-    messagingSenderId: "SENDER_ID",
-    appId: "APP_ID"
+  // ? ???????? Firebase Config
+  const firebaseConfig = {
+    apiKey: "AIzaSyDnydPhUmns376_QXo7CInsSWL7kXO8chU",
+    authDomain: "reactionapp-25924.firebaseapp.com",
+    databaseURL: "https://reactionapp-25924-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "reactionapp-25924",
+    storageBucket: "reactionapp-25924.firebasestorage.app",
+    messagingSenderId: "1048361753014",
+    appId: "1:1048361753014:web:14015b761a9481ec460917"
   };
+
+  // ? Firebase Initialize
   firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
 
-  var db = firebase.database();
-  var reactionsRef = db.ref('reactions');
-
-  // ?? Real-time listener
-  reactionsRef.on('value', function(snapshot) {
-    var data = snapshot.val() || { like: 0, dislike: 0, heart: 0 };
+  // ? Realtime Listener
+  const reactionsRef = db.ref('reactions');
+  reactionsRef.on('value', snapshot => {
+    const data = snapshot.val() || { like: 0, dislike: 0, heart: 0 };
     document.getElementById('likeCount').innerText = data.like || 0;
     document.getElementById('dislikeCount').innerText = data.dislike || 0;
     document.getElementById('heartCount').innerText = data.heart || 0;
   });
 
-  // ?? Update function
+  // ? Update Reaction
   function updateReaction(type) {
-    var ref = db.ref('reactions/' + type);
-    ref.transaction(function(currentValue) {
-      return (currentValue || 0) + 1;
+    db.ref('reactions/' + type).transaction(current => {
+      return (current || 0) + 1;
     });
   }
 </script>
