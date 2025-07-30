@@ -44,23 +44,23 @@
   <h2>React on this Card</h2>
   <div class="reactions">
     <div class="reaction" onclick="updateReaction('like')">
-      ?? <span class="count" id="likeCount">0</span>
+      👍 <span class="count" id="likeCount">0</span>
     </div>
     <div class="reaction" onclick="updateReaction('dislike')">
-      ?? <span class="count" id="dislikeCount">0</span>
+      👎 <span class="count" id="dislikeCount">0</span>
     </div>
     <div class="reaction" onclick="updateReaction('heart')">
-      ?? <span class="count" id="heartCount">0</span>
+      ❤️ <span class="count" id="heartCount">0</span>
     </div>
   </div>
 </div>
 
-<!-- ? Firebase SDK -->
+<!-- ✅ Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
 <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
 
 <script>
-  // ? ???????? Firebase Config
+  // ✅ तुम्हारा Firebase Config
   const firebaseConfig = {
     apiKey: "AIzaSyDnydPhUmns376_QXo7CInsSWL7kXO8chU",
     authDomain: "reactionapp-25924.firebaseapp.com",
@@ -71,11 +71,11 @@
     appId: "1:1048361753014:web:14015b761a9481ec460917"
   };
 
-  // ? Firebase Initialize
+  // ✅ Firebase Initialize
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  // ? Realtime Listener
+  // ✅ Realtime Listener
   const reactionsRef = db.ref('reactions');
   reactionsRef.on('value', snapshot => {
     const data = snapshot.val() || { like: 0, dislike: 0, heart: 0 };
@@ -84,7 +84,7 @@
     document.getElementById('heartCount').innerText = data.heart || 0;
   });
 
-  // ? Update Reaction
+  // ✅ Update Reaction
   function updateReaction(type) {
     db.ref('reactions/' + type).transaction(current => {
       return (current || 0) + 1;
